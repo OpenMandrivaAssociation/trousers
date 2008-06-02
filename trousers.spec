@@ -92,7 +92,7 @@ install -d %{buildroot}%{_initrddir}
 install -m0755 dist/fedora/fedora.initrd.tcsd %{buildroot}%{_initrddir}/tcsd
 
 %pre
-%_pre_useradd tss %{_localstatedir}/tss /bin/sh
+%_pre_useradd tss %{_localstatedir}/lib/tss /bin/sh
 
 %post
 %_post_service tcsd
@@ -117,7 +117,7 @@ rm -rf %{buildroot}
 %attr(0755,tss,tss) %{_sbindir}/tcsd
 %attr(0755,root,root) %{_sbindir}/ps_convert
 %attr(0755,root,root) %{_sbindir}/ps_inspect
-%attr(0700,tss,tss) %dir %{_localstatedir}/tpm
+%attr(0700,tss,tss) %dir %{_localstatedir}/lib/tpm
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 
