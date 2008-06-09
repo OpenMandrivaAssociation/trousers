@@ -103,9 +103,13 @@ install -m0755 dist/fedora/fedora.initrd.tcsd %{buildroot}%{_initrddir}/tcsd
 %postun
 %_postun_userdel tss
 
+%if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
+%endif
 
+%if %mdkversion < 200900
 %postun -n %{libname} -p /sbin/ldconfig
+%endif
 
 %clean
 rm -rf %{buildroot}
