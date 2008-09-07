@@ -4,14 +4,15 @@
 
 Summary:	Implementation of the TCG's Software Stack v1.1 Specification
 Name:		trousers
-Version:	0.3.0
-Release:	%mkrel 4
+Version:	0.3.1
+Release:	%mkrel 1
 License:	CPL
 Group:		System/Servers
 URL:		http://www.sf.net/projects/trousers
 Source0:	http://downloads.sourceforge.net/trousers/%{name}-%{version}.tar.gz
 Patch0:		trousers-no_werror.diff
 Patch1:		trousers-mdv_conf.diff
+Patch2:		trousers-gcc43.diff
 BuildRequires:	libtool
 BuildRequires:	autoconf2.5
 BuildRequires:	gtk2-devel
@@ -22,7 +23,7 @@ Requires(post): rpm-helper
 Requires(preun): rpm-helper
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 TrouSerS is an implementation of the Trusted Computing Group's Software Stack
@@ -62,6 +63,7 @@ This package contains the static %{name} library and its header files.
 %setup -q
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
 
 # weird bug
 mkdir -p py/dist
@@ -92,7 +94,7 @@ install -d %{buildroot}%{_initrddir}
 install -m0755 dist/fedora/fedora.initrd.tcsd %{buildroot}%{_initrddir}/tcsd
 
 %pre
-%_pre_useradd tss %{_localstatedir}/lib/tss /bin/sh
+%_pre_useradd tss /var/lib/tss /bin/sh
 
 %post
 %_post_service tcsd
@@ -121,14 +123,14 @@ rm -rf %{buildroot}
 %attr(0755,tss,tss) %{_sbindir}/tcsd
 %attr(0755,root,root) %{_sbindir}/ps_convert
 %attr(0755,root,root) %{_sbindir}/ps_inspect
-%attr(0700,tss,tss) %dir %{_localstatedir}/lib/tpm
+%attr(0700,tss,tss) %dir /var/lib/tpm
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 
 %files -n %{libname}
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog LICENSE NICETOHAVES README README.selinux TODO doc/*
-%{_libdir}/*.so.*
+%{_libdir}/*.so.%{major}*
 
 %files -n %{develname}
 %defattr(-,root,root)
