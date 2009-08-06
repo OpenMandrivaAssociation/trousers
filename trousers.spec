@@ -4,15 +4,15 @@
 
 Summary:	Implementation of the TCG's Software Stack v1.1 Specification
 Name:		trousers
-Version:	0.3.1
+Version:	0.3.2
 Release:	%mkrel 1
 License:	CPL
 Group:		System/Servers
 URL:		http://www.sf.net/projects/trousers
-Source0:	http://downloads.sourceforge.net/trousers/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/trousers/%{name}-%{version}.tar.bz2
 Patch0:		trousers-no_werror.diff
 Patch1:		trousers-mdv_conf.diff
-Patch2:		trousers-gcc43.diff
+Patch2:		trousers-lsb.diff
 BuildRequires:	libtool
 BuildRequires:	autoconf2.5
 BuildRequires:	gtk2-devel
@@ -61,7 +61,7 @@ This package contains the static %{name} library and its header files.
 %prep
 
 %setup -q
-%patch0 -p0
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 
