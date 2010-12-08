@@ -5,7 +5,7 @@
 Summary:	Implementation of the TCG's Software Stack v1.1 Specification
 Name:		trousers
 Version:	0.3.2
-Release:	%mkrel 3
+Release:	%mkrel 4
 License:	CPL
 Group:		System/Servers
 URL:		http://www.sf.net/projects/trousers
