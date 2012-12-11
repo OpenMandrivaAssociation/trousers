@@ -16,14 +16,13 @@ Patch2:		trousers-lsb.diff
 BuildRequires:	libtool
 BuildRequires:	autoconf2.5
 BuildRequires:	gtk2-devel
-BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig(openssl)
 BuildRequires:	gmp-devel
 Requires:	openssl
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 TrouSerS is an implementation of the Trusted Computing Group's Software Stack
@@ -68,10 +67,12 @@ This package contains the static %{name} library and its header files.
 # weird bug
 mkdir -p py/dist
 touch py/dist/Makefile.in
+sed -i -r -e '/CFLAGS/s/ -(Werror|m64)//' configure.in
 
 %build
 %serverbuild
-libtoolize --copy --force; aclocal; automake --add-missing -copy --foreign; autoconf
+autoreconf -fi
+#libtoolize --copy --force; aclocal; automake --add-missing -copy --foreign; autoconf
 
 %configure2_5x \
     --localstatedir=/var \
@@ -82,8 +83,6 @@ libtoolize --copy --force; aclocal; automake --add-missing -copy --foreign; auto
 %make
 
 %install
-rm -rf %{buildroot}
-
 %makeinstall_std
 
 # install some extra stuff
@@ -105,19 +104,7 @@ install -m0755 dist/fedora/fedora.initrd.tcsd %{buildroot}%{_initrddir}/tcsd
 %postun
 %_postun_userdel tss
 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %attr(0755,root,root) %{_initrddir}/tcsd
 %attr(0600,tss,tss) %config(noreplace) %{_sysconfdir}/tcsd.conf
 %attr(0755,tss,tss) %{_sbindir}/tcsd
@@ -128,15 +115,12 @@ rm -rf %{buildroot}
 %{_mandir}/man8/*
 
 %files -n %{libname}
-%defattr(-,root,root)
 %doc AUTHORS ChangeLog LICENSE NICETOHAVES README README.selinux TODO doc/*
 %{_libdir}/*.so.%{major}*
 
 %files -n %{develname}
-%defattr(-,root,root)
 %{_libdir}/*.so
 %{_libdir}/*.a
-%{_libdir}/*.la
 %dir %{_includedir}/tss
 %dir %{_includedir}/trousers
 %{_includedir}/tss/*.h
