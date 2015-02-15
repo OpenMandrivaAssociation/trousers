@@ -41,7 +41,8 @@ applications.
 %setup -q
 
 %build
-%configure2_5x --with-gui=openssl --disable-static
+export CC=gcc
+%configure --with-gui=openssl
 %make
 
 %install
