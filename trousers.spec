@@ -2,6 +2,10 @@
 %define libname %mklibname tspi %{major}
 %define develname %mklibname -d %{name}
 
+%define _disable_lto 1
+%define _disable_rebuild_configure 1
+%define _disable_ld_no_undefined 1
+
 Name:		trousers
 Summary:	TCG's Software Stack v1.2
 Version:	0.3.13
@@ -11,6 +15,7 @@ Group:		System/Libraries
 Url:		http://trousers.sourceforge.net
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	tcsd.service
+Patch1:		trousers-0.3.13-mga-noinline.patch
 BuildRequires:	openssl-devel
 
 %description
@@ -39,6 +44,7 @@ applications.
 
 %prep
 %setup -q
+%apply_patches
 
 %build
 export CC=gcc
