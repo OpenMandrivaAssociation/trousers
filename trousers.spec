@@ -16,6 +16,7 @@ Url:		http://trousers.sourceforge.net
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	tcsd.service
 Patch1:		trousers-0.3.13-mga-noinline.patch
+Patch2:		trousers-openssl1.1.patch
 BuildRequires:	openssl-devel
 
 %description
@@ -47,7 +48,6 @@ applications.
 %apply_patches
 
 %build
-export CC=gcc
 %configure --with-gui=openssl
 %make
 
