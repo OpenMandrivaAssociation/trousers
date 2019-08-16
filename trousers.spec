@@ -46,6 +46,8 @@ applications.
 %prep
 %setup -q
 %apply_patches
+# fix man page paths
+sed -i -e 's|/var/tpm|/var/lib/tpm|g' -e 's|/usr/local/var|/var|g' man/man5/tcsd.conf.5.in man/man8/tcsd.8.in
 
 %build
 %configure --with-gui=openssl
