@@ -8,16 +8,22 @@
 
 Name:		trousers
 Summary:	TCG's Software Stack v1.2
-Version:	0.3.13
-Release:	4
+Version:	0.3.15
+Release:	1
 License:	BSD
 Group:		System/Libraries
 Url:		http://trousers.sourceforge.net
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-Source1:	tcsd.service
-Patch1:		trousers-0.3.13-mga-noinline.patch
-Patch2:		trousers-openssl1.1.patch
-BuildRequires:	openssl-devel
+Source1:	%{name}.sysusers
+Source2:	https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/tcsd.service
+Patch1:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.14-noinline.patch
+# submitted upstream
+Patch2:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.14-unlock-in-err-path.patch
+Patch3:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.14-fix-indent-obj_policy.patch
+Patch4:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.14-fix-indent-tspi_key.patch
+BuildRequires:	pkgconfig(openssl)
+Requires(pre):	systemd
+%systemd_requires
 
 %description
 TrouSerS is an implementation of the Trusted Computing Group's Software Stack
@@ -44,36 +50,40 @@ Header files and man pages for use in creating Trusted Computing enabled
 applications.
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1
 # fix man page paths
 sed -i -e 's|/var/tpm|/var/lib/tpm|g' -e 's|/usr/local/var|/var|g' man/man5/tcsd.conf.5.in man/man8/tcsd.8.in
 
 %build
+chmod +x ./bootstrap.sh
+./bootstrap.sh
+
 %configure --with-gui=openssl
-%make
+%make_build
 
 %install
-%makeinstall_std
+%make_install
 rm -f %{buildroot}/%{_libdir}/libtspi.la
+install -Dpm 644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
 mkdir -p %{buildroot}%{_unitdir}
-install -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/
+install -m 0644 %{SOURCE2} %{buildroot}%{_unitdir}/
 
 %pre
-%_pre_useradd tss /dev/null /bin/false
+%sysusers_create_package %{name}.conf %{SOURCE1}
 
 %post
-%_post_service tcsd
+%systemd_post tcsd.service
 
 %preun
-%_preun_service tcsd
+%systemd_preun tcsd.service
 
 %postun
-%_postun_userdel tss
+%systemd_postun_with_restart tcsd.service 
 
 %files
 %doc README LICENSE ChangeLog
 %{_sbindir}/tcsd
+%{_sysusersdir}/%{name}.conf
 %config(noreplace) %attr(0600, tss, tss) %{_sysconfdir}/tcsd.conf
 %{_mandir}/man5/*
 %{_mandir}/man8/*
