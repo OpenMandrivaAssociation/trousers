@@ -9,7 +9,7 @@
 Name:		trousers
 Summary:	TCG's Software Stack v1.2
 Version:	0.3.15
-Release:	2
+Release:	3
 License:	BSD
 Group:		System/Libraries
 Url:		http://trousers.sourceforge.net
