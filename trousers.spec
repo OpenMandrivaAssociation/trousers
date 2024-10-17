@@ -12,7 +12,7 @@ Version:	0.3.15
 Release:	3
 License:	BSD
 Group:		System/Libraries
-Url:		http://trousers.sourceforge.net
+Url:		https://trousers.sourceforge.net
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	%{name}.sysusers
 Source2:	https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/tcsd.service
