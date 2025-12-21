@@ -21,6 +21,11 @@ Patch1:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.
 Patch2:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.14-unlock-in-err-path.patch
 Patch3:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.14-fix-indent-obj_policy.patch
 Patch4:		https://src.fedoraproject.org/rpms/trousers/raw/rawhide/f/trousers-0.3.14-fix-indent-tspi_key.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	pkgconfig(openssl)
 Requires(pre):	systemd
 %systemd_requires
